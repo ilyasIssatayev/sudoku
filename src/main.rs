@@ -1,0 +1,59 @@
+use std::fs::read_to_string;
+
+fn main() {
+    println!("sudoku");
+    let puzzles = read_sudoku_file();
+    println!("{:#?}", puzzles);
+}
+
+fn read_sudoku_file() -> Vec<Sudoku> {
+    let file = read_to_string("./data/sudoku_puzzles.csv").expect("Cant read the file");
+    println!("file {file}");
+
+    file.lines().skip(1).filter_map(Sudoku::from_line).collect()
+}
+
+#[derive(Debug)]
+struct Sudoku {
+    id: u32,
+    difficulty: String,
+    clues: u32,
+    grid: [[u8; 9]; 9],
+}
+
+impl Sudoku {
+    fn from_line(line: &str) -> Option<Self> {
+        let parts: Vec<&str> = line.split(",").collect();
+        let id = parts[0].parse::<u32>().ok()?;
+        let difficulty = parts[1].to_string();
+        let clues = parts[2].parse::<u32>().ok()?;
+        let puzzle = parts[3];
+
+        let mut grid = [[0u8; 9]; 9];
+
+        for (i, ch) in puzzle.chars().enumerate() {
+            let digit = ch.to_digit(10)? as u8;
+            grid[i / 9][i % 9] = digit;
+        }
+        Some(Sudoku {
+            id,
+            difficulty,
+            clues,
+            grid,
+        })
+    }
+
+    fn row(&self, index: usize) -> [u8; 9] {
+        self.grid[index]
+    }
+    fn col(&self, index: usize) -> [u8; 9] {
+        let mut elements = [0u8; 9];
+
+        for rowIndex in 0..9 {
+            let row = self.grid[rowIndex];
+            elements[rowIndex] = row[index];
+        }
+
+        return elements;
+    }
+}
