@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 #[derive(Debug)]
 pub struct Sudoku {
     id: u32,
@@ -40,5 +42,16 @@ impl Sudoku {
         }
 
         return elements;
+    }
+}
+
+trait Valid {
+    fn is_valid(&self) -> bool;
+}
+
+impl Valid for [u8; 9] {
+    fn is_valid(&self) -> bool {
+        let set: HashSet<u8> = self.iter().copied().filter(|&x| x != 0).collect();
+        set.len() == 9
     }
 }
