@@ -43,6 +43,15 @@ impl Sudoku {
 
         return elements;
     }
+    pub fn square(&self, x: usize, y: usize) -> [[u8; 3]; 3] {
+        let mut square = [[0u8; 3]; 3];
+        for i in 0..3 {
+            for j in 0..3 {
+                square[i][j] = self.grid[x * 3 + i][y * 3 + j];
+            }
+        }
+        square
+    }
 }
 
 trait Valid {
@@ -52,6 +61,13 @@ trait Valid {
 impl Valid for [u8; 9] {
     fn is_valid(&self) -> bool {
         let set: HashSet<u8> = self.iter().copied().filter(|&x| x != 0).collect();
+        set.len() == 9
+    }
+}
+
+impl Valid for [[u8; 3]; 3] {
+    fn is_valid(&self) -> bool {
+        let set: HashSet<u8> = self.iter().flatten().copied().filter(|&x| x != 0).collect();
         set.len() == 9
     }
 }
