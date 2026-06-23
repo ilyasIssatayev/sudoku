@@ -6,10 +6,16 @@ use sudoku::Sudoku;
 
 fn main() {
     println!("sudoku");
-    let puzzles = read_sudoku_file();
-    let mut propabilities = get_propabilities(&puzzles[0]);
+    let mut puzzles = read_sudoku_file();
+    solve_sudoku(puzzles.remove(0))
+}
+
+fn solve_sudoku(sudoku: Sudoku) {
+    let mut propabilities = get_propabilities(&sudoku);
+    for i in 0..9 {
+        purge_row_porpabilities(&mut propabilities[0], &sudoku.row(i));
+    }
     print_probabilities(&propabilities);
-    purge_row_porpabilities(&mut propabilities[0], &puzzles[0].row(1));
 }
 
 fn read_sudoku_file() -> Vec<Sudoku> {
