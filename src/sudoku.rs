@@ -1,11 +1,12 @@
 use std::collections::HashSet;
+use std::fmt;
 
 #[derive(Debug)]
 pub struct Sudoku {
-    id: u32,
-    difficulty: String,
-    clues: u32,
-    grid: [[u8; 9]; 9],
+    pub id: u32,
+    pub difficulty: String,
+    pub clues: u32,
+    pub grid: [[u8; 9]; 9],
 }
 
 impl Sudoku {
@@ -51,6 +52,24 @@ impl Sudoku {
             }
         }
         square
+    }
+}
+
+impl fmt::Display for Sudoku {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        writeln!(f, "Puzzle #{} — {} ({} clues)", self.id, self.difficulty, self.clues)?;
+        let sep = "+-------+-------+-------+";
+        for row in 0..9 {
+            if row % 3 == 0 { writeln!(f, "{}", sep)?; }
+            for col in 0..9 {
+                if col % 3 == 0 { write!(f, "| ")?; }
+                let cell = self.grid[row][col];
+                if cell == 0 { write!(f, ". ")?; } else { write!(f, "{} ", cell)?; }
+            }
+            writeln!(f, "|")?;
+        }
+        writeln!(f, "{}", sep)?;
+        Ok(())
     }
 }
 
