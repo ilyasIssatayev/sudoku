@@ -12,8 +12,10 @@ fn main() {
 
 fn solve_sudoku(sudoku: Sudoku) {
     let mut propabilities = get_propabilities(&sudoku);
+    print_probabilities(&propabilities);
+    print!("\n ==== \n");
     for i in 0..9 {
-        purge_row_porpabilities(&mut propabilities[0], &sudoku.row(i));
+        purge_row_porpabilities(&mut propabilities[i], &sudoku.row(i));
     }
     print_probabilities(&propabilities);
 }
@@ -39,6 +41,8 @@ fn get_propabilities(sudoku: &Sudoku) -> [[Vec<u8>; 9]; 9] {
 
 fn purge_row_porpabilities(propabilities: &mut [Vec<u8>; 9], row: &[u8; 9]) {
     for propability_square in propabilities {
-        propability_square.retain(|x| !row.contains(x));
+        if propability_square.len() > 1 {
+            propability_square.retain(|x| !row.contains(x));
+        }
     }
 }
