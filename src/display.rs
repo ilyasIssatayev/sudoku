@@ -1,3 +1,17 @@
+pub fn print_sudoku(grid: &[[u8; 9]; 9]) {
+    let sep = "+-------+-------+-------+";
+    for row in 0..9 {
+        if row % 3 == 0 { println!("{}", sep); }
+        for col in 0..9 {
+            if col % 3 == 0 { print!("| "); }
+            let cell = grid[row][col];
+            if cell == 0 { print!(". "); } else { print!("{} ", cell); }
+        }
+        println!("|");
+    }
+    println!("{}", sep);
+}
+
 pub fn print_probabilities(probabilities: &[[Vec<u8>; 9]; 9]) {
     let h_box_sep = "+-------------------+   +-------------------+   +-------------------+";
     let h_cell_sep = "|------+------+------|   |------+------+------|   |------+------+------|";

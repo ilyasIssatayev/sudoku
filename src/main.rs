@@ -1,7 +1,7 @@
 use std::fs::read_to_string;
 mod display;
 mod sudoku;
-use display::print_probabilities;
+use display::{print_probabilities, print_sudoku};
 use sudoku::Sudoku;
 
 fn main() {
@@ -12,12 +12,22 @@ fn main() {
 
 fn solve_sudoku(sudoku: Sudoku) {
     let mut propabilities = get_propabilities(&sudoku);
-    print_probabilities(&propabilities);
-    print!("\n ==== \n");
+    // print_probabilities(&propabilities);
+    // print_sudoku(&sudoku.grid);
+    // return;
+    // print!("\n\n start ==== \n");
     for i in 0..9 {
-        purge_row_porpabilities(&mut propabilities[i], &sudoku.row(i));
+        purge_line_porpabilities(&mut propabilities[i], &sudoku.row(i));
     }
+    print!("\n\n rows purged ==== \n");
     print_probabilities(&propabilities);
+    print_sudoku(&sudoku.grid);
+    for i in 0..9 {
+        purge_line_porpabilities(&mut propabilities[i], &sudoku.col(i));
+    }
+    print!("\n\n cols purged ==== \n");
+    print_probabilities(&propabilities);
+    print_sudoku(&sudoku.grid);
 }
 
 fn read_sudoku_file() -> Vec<Sudoku> {
@@ -39,7 +49,7 @@ fn get_propabilities(sudoku: &Sudoku) -> [[Vec<u8>; 9]; 9] {
     return propabilities;
 }
 
-fn purge_row_porpabilities(propabilities: &mut [Vec<u8>; 9], row: &[u8; 9]) {
+fn purge_line_porpabilities(propabilities: &mut [Vec<u8>; 9], row: &[u8; 9]) {
     for propability_square in propabilities {
         if propability_square.len() > 1 {
             propability_square.retain(|x| !row.contains(x));
